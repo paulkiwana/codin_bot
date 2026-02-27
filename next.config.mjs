@@ -3,6 +3,8 @@ import withPWA from 'next-pwa';
 
 const nextConfig = {
   reactStrictMode: true,
+  // Turbopack config (empty to allow next-pwa webpack config)
+  turbopack: {},
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
