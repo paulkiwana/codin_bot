@@ -142,4 +142,20 @@ body {
   .card-glass {
     transition: all 100ms ease;
   }
+  
+  /* Disable tap highlight on mobile */
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  * {
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+  }
+  
+  input,
+  textarea,
+  select {
+    -webkit-user-select: text;
+  }
 }

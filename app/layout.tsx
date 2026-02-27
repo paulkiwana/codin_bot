@@ -49,15 +49,8 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        {/* Performance optimization */}
         <link rel="preconnect" href="https://api.binance.com" />
         <link rel="dns-prefetch" href="https://api.binance.com" />
-        {/* Disable tap highlight on mobile */}
-        <style>{`
-          body { -webkit-tap-highlight-color: transparent; }
-          * { -webkit-user-select: none; -webkit-user-drag: none; }
-          input, textarea, select { -webkit-user-select: text; }
-        `}</style>
       </head>
       <body className="bg-background text-foreground overflow-x-hidden">
         <MonitoringProvider>
