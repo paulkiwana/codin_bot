@@ -54,16 +54,40 @@ npm run dev
 
 The easiest way to deploy is to use Vercel:
 
-1. Push your code to GitHub
-2. Go to [Vercel](https://vercel.com) and import your repository
-3. Click Deploy
-4. Your site will be live at a Vercel URL
+#### Option 1: Deploy via Vercel Dashboard
+1. Push your code to GitHub (https://github.com/paulkiwana/codin_bot)
+2. Go to [Vercel](https://vercel.com) and sign in
+3. Click "New Project" → "Import Git Repository"
+4. Select your repository
+5. Framework: "Next.js" (auto-detected)
+6. Click "Deploy"
+7. Your site will be live at a Vercel URL (e.g., `https://crypto-monitor-xxx.vercel.app`)
 
-Then you can:
-- Visit the URL on your phone
-- Click the install icon in Chrome address bar
-- Select "Install app"
-- The app will appear on your home screen
+#### Option 2: One-Click Deploy
+Click this button to deploy directly:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/paulkiwana/codin_bot)
+
+#### Installing as a Chrome App
+
+After deployment, install on your phone or desktop:
+
+1. **On Mobile (Chrome for Android)**
+   - Open the deployed Vercel URL in Chrome
+   - Look for the install icon (box with arrow) in the address bar
+   - Tap "Install app"
+   - The app appears on your home screen like a native app
+
+2. **On Desktop (Chrome)**
+   - Open the deployed Vercel URL in Chrome
+   - Click the install icon in the address bar
+   - Click "Install"
+   - Access from your app menu or start menu
+
+3. **Features as Installed App**
+   - Works offline with cached data
+   - Push notifications for alerts
+   - Full-screen, app-like interface
+   - No browser toolbar (standalone mode)
 
 ## How to Use
 
@@ -94,15 +118,41 @@ Then you can:
 - Enable/disable notifications
 - Delete all data
 
+## What's New (v2.0)
+
+✨ **UI Enhancements**
+- Price sparkline charts showing 24h price history
+- Improved card design with better visual hierarchy
+- Smooth animations and transitions
+- Better empty states with engaging UI
+- Responsive design for all screen sizes
+
+⚡ **Performance Optimizations**
+- Code splitting and lazy loading
+- Request debouncing (5-second cache for API calls)
+- Optimized service worker caching
+- Image optimization for mobile
+- Memoized components for faster re-renders
+- Minimal JavaScript bundle
+
+🚀 **Production Ready**
+- Deployed on Vercel with global CDN
+- SEO optimized metadata
+- Security headers configured
+- Progressive Web App (PWA) fully enabled
+- Offline-first architecture
+
 ## Technical Stack
 
-- **Frontend**: Next.js 15, React 19, TypeScript
+- **Frontend**: Next.js 16, React 19, TypeScript
 - **Styling**: Tailwind CSS
+- **Charts**: Recharts for price visualization
 - **Icons**: Lucide React
-- **PWA**: next-pwa
-- **API**: Binance REST API
-- **Storage**: Browser localStorage
+- **PWA**: next-pwa with aggressive caching
+- **API**: Binance REST API (rate-limited, cached)
+- **Storage**: Browser localStorage with PWA cache
 - **Notifications**: Web Notifications API
+- **Hosting**: Vercel with edge caching
 
 ## Data & Privacy
 

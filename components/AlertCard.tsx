@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { AlertCircle, CheckCircle2, Trash2, X } from 'lucide-react';
 import type { Alert } from '@/lib/types';
 
@@ -9,7 +10,7 @@ interface AlertCardProps {
   onMarkRead: () => void;
 }
 
-export default function AlertCard({ alert, onDismiss, onMarkRead }: AlertCardProps) {
+function AlertCardComponent({ alert, onDismiss, onMarkRead }: AlertCardProps) {
   const getAlertColor = (type: Alert['type']) => {
     switch (type) {
       case 'support_breach':
@@ -128,3 +129,5 @@ export default function AlertCard({ alert, onDismiss, onMarkRead }: AlertCardPro
     </div>
   );
 }
+
+export default memo(AlertCardComponent);

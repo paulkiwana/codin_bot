@@ -10,6 +10,7 @@ export interface Symbol {
   lastRSI?: number;
   lastUpdated?: number;
   percentageChange?: number;
+  priceHistory?: Array<{ time: number; price: number }>;
 }
 
 export interface Alert {

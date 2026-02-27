@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+.next/
+out/
+dist/
+build/
+
+# Environment
+.env.local
+.env.*.local
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+__tests__/
+coverage/
+.jest/
+
+# Documentation and logs
+README.md
+CHANGELOG.md
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (legacy desktop app)
+*.py
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Optional
+.turbo/
+.cache/
+.vercelignore
