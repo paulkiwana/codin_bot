@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useMonitoring } from '@/lib/context/MonitoringContext';
 import DashboardCard from '@/components/DashboardCard';
 import { Play, Square, Plus } from 'lucide-react';
@@ -8,7 +8,20 @@ import Modal from '@/components/Modal';
 import SymbolForm from '@/components/SymbolForm';
 
 export default function Dashboard() {
-  const { symbols, isMonitoring, lastUpdateTime, startMonitoring, stopMonitoring, toggleSymbol, removeSymbol, addSymbol } = useMonitoring();
+  const context = useMonitoring();
+  
+  if (!context) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold mb-2">Loading...</h2>
+          <p className="text-foreground/60">Initializing crypto monitor</p>
+        </div>
+      </div>
+    );
+  }
+  
+  const { symbols, isMonitoring, lastUpdateTime, startMonitoring, stopMonitoring, toggleSymbol, removeSymbol, addSymbol } = context;
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingSymbol, setEditingSymbol] = useState<string | null>(null);
 
