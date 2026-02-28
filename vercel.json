@@ -10,7 +10,6 @@
       "value": "Crypto Monitor"
     }
   },
-  "envPrefix": "NEXT_PUBLIC_",
   "regions": ["iad1"],
   "functions": {
     "api/**/*.ts": {
