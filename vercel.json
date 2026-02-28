@@ -5,10 +5,7 @@
   "devCommand": "next dev --port $PORT",
   "framework": "nextjs",
   "env": {
-    "NEXT_PUBLIC_APP_NAME": {
-      "description": "Application name for PWA",
-      "value": "Crypto Monitor"
-    }
+    "NEXT_PUBLIC_APP_NAME": "Crypto Monitor"
   },
   "regions": ["iad1"],
   "functions": {
