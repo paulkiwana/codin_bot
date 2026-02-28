@@ -7,6 +7,12 @@ export const metadata: Metadata = {
   title: 'Crypto Monitor - Real-time Price Alerts',
   description: 'Monitor cryptocurrency prices and receive alerts for trading opportunities. Install as a Chrome app.',
   manifest: '/manifest.json',
+  metadataBase: new URL('https://crypto-monitor.vercel.app'),
+  openGraph: {
+    title: 'Crypto Monitor',
+    description: 'Real-time cryptocurrency price monitoring and alerts',
+    type: 'website',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -43,6 +49,8 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="preconnect" href="https://api.binance.com" />
+        <link rel="dns-prefetch" href="https://api.binance.com" />
       </head>
       <body className="bg-background text-foreground overflow-x-hidden">
         <MonitoringProvider>
