@@ -6,6 +6,7 @@ import DashboardCard from '@/components/DashboardCard';
 import { Play, Square, Plus } from 'lucide-react';
 import Modal from '@/components/Modal';
 import SymbolForm from '@/components/SymbolForm';
+import EmptyState from '@/components/EmptyState';
 
 export default function Dashboard() {
   const context = useMonitoring();
@@ -71,20 +72,13 @@ export default function Dashboard() {
       {/* Content */}
       <main className="max-w-md mx-auto px-4 py-6 space-y-4">
         {symbols.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-              <Plus className="text-primary" size={32} />
-            </div>
-            <h2 className="text-lg font-semibold mb-2">No Cryptocurrencies Yet</h2>
-            <p className="text-foreground/60 mb-6">Add your first cryptocurrency to start monitoring prices and receiving alerts.</p>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-background font-semibold rounded-lg transition-colors"
-            >
-              <Plus size={18} />
-              Add Cryptocurrency
-            </button>
-          </div>
+          <EmptyState
+            title="No Cryptocurrencies Yet"
+            description="Add your first cryptocurrency to start monitoring prices and receiving alerts."
+            buttonText="Add Cryptocurrency"
+            onAction={() => setShowAddModal(true)}
+            icon="plus"
+          />
         ) : (
           <>
             {symbols.map((symbol) => (

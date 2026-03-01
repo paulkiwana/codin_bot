@@ -2,6 +2,19 @@ import type { CryptoData, BinanceKline } from '../types';
 
 const BINANCE_API = 'https://api.binance.com/api/v3';
 
+// Request debouncing cache
+const requestCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_DURATION = 5000; // 5 seconds
+
+function getFromCache(key: string): any | null {
+  const cached = requestCache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  requestCache.delete(key);
+  return null;
+}
+
 export class CryptoService {
   /**
    * Fetch klines data from Binance API
@@ -34,10 +47,16 @@ export class CryptoService {
   }
 
   /**
-   * Fetch current price from Binance API
+   * Fetch current price from Binance API (with caching)
    */
   static async getPrice(symbol: string): Promise<number | null> {
     try {
+      const cacheKey = `price:${symbol}`;
+      const cached = getFromCache(cacheKey);
+      if (cached !== null) {
+        return cached;
+      }
+
       const response = await fetch(
         `${BINANCE_API}/ticker/price?symbol=${symbol}USDT`,
         {
@@ -53,7 +72,9 @@ export class CryptoService {
       }
 
       const data = await response.json();
-      return parseFloat(data.price);
+      const price = parseFloat(data.price);
+      requestCache.set(cacheKey, { data: price, timestamp: Date.now() });
+      return price;
     } catch (error) {
       console.error(`Failed to fetch price for ${symbol}:`, error);
       return null;
@@ -186,6 +207,30 @@ export class CryptoService {
       return price !== null;
     } catch {
       return false;
+    }
+  }
+
+  /**
+   * Get price history for sparkline chart (24h with 1h intervals)
+   */
+  static async getPriceHistory(
+    symbol: string,
+    interval: string = '1h',
+    limit: number = 24
+  ): Promise<Array<{ time: number; price: number }>> {
+    try {
+      const klines = await this.getKlines(symbol, interval, limit);
+      if (klines.length === 0) {
+        return [];
+      }
+
+      return klines.map((kline) => ({
+        time: kline[0] as number,
+        price: parseFloat(kline[4]),
+      }));
+    } catch (error) {
+      console.error(`Failed to fetch price history for ${symbol}:`, error);
+      return [];
     }
   }
 
