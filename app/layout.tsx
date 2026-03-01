@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { MonitoringProvider } from '@/lib/context/MonitoringContext';
 import Navigation from '@/components/Navigation';
+import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -53,6 +54,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.binance.com" />
       </head>
       <body className="bg-background text-foreground overflow-x-hidden">
+        <ServiceWorkerRegister />
         <MonitoringProvider>
           <div className="min-h-screen flex flex-col">
             <main className="flex-1 pb-20">

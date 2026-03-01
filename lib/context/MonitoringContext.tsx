@@ -279,8 +279,5 @@ export function MonitoringProvider({ children }: { children: React.ReactNode }) 
 
 export function useMonitoring() {
   const context = useContext(MonitoringContext);
-  if (!context) {
-    throw new Error('useMonitoring must be used within MonitoringProvider');
-  }
   return context;
 }
