@@ -1,5 +1,6 @@
 {
   "buildCommand": "",
+  "public": true,
   "headers": [
     {
       "source": "/sw.js",
@@ -9,15 +10,12 @@
           "value": "public, max-age=0, must-revalidate"
         }
       ]
-    },
+    }
+  ],
+  "rewrites": [
     {
       "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        }
-      ]
+      "destination": "/index.html"
     }
   ]
 }
