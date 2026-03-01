@@ -1,6 +1,5 @@
 {
   "buildCommand": "",
-  "framework": "static",
   "headers": [
     {
       "source": "/sw.js",
