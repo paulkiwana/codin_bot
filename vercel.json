@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install; npm run dev",
+  "buildCommand": "",
   "headers": [
     {
       "source": "/sw.js",
