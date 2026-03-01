@@ -2,7 +2,7 @@ services:
   - type: static
     name: crypto-monitor
     env: static
-    buildCommand: "npm install; npm run dev"
+    buildCommand: ""
     staticPublishPath: ./
     routes:
       - path: /*
