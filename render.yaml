@@ -1,0 +1,10 @@
+services:
+  - type: static
+    name: crypto-monitor
+    env: static
+    buildCommand: ""
+    staticPublishPath: ./
+    routes:
+      - path: /*
+        matchType: prefix
+        dest: /index.html

@@ -1,0 +1,53 @@
+{
+  "name": "Crypto Monitor - Price Tracker",
+  "short_name": "Crypto Monitor",
+  "description": "Real-time cryptocurrency price tracking with RSI alerts",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#00d4aa",
+  "icons": [
+    {
+      "src": "icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["finance"],
+  "shortcuts": [
+    {
+      "name": "Start Monitoring",
+      "short_name": "Monitor",
+      "description": "Start crypto price monitoring",
+      "url": "/?tab=dashboard",
+      "icons": [
+        {
+          "src": "icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}
