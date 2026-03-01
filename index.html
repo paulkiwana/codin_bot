@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Crypto Monitor - Real-time cryptocurrency price tracking with RSI alerts">
+    <meta name="theme-color" content="#0f172a">
+    <title>Crypto Monitor</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 70px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 20px;
+            border-bottom: 1px solid #1e293b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00d4aa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00d4aa;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        main {
+            flex: 1;
+            padding: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #00d4aa;
+            border-bottom-color: #00d4aa;
+        }
+
+        .tab-btn:hover {
+            color: #00d4aa;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 16px;
+            background: #00d4aa;
+            color: #0f172a;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #00b894;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: #1e293b;
+            color: #00d4aa;
+            border: 1px solid #00d4aa;
+        }
+
+        button.secondary:hover {
+            background: #00d4aa;
+            color: #0f172a;
+        }
+
+        button.danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        button.danger:hover {
+            background: #dc2626;
+        }
+
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: #00d4aa;
+            box-shadow: 0 4px 12px rgba(0, 212, 170, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00d4aa;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .symbol-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .info-item {
+            padding: 8px;
+            background: #0f172a;
+            border-radius: 4px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .price-up {
+            color: #10b981;
+        }
+
+        .price-down {
+            color: #ef4444;
+        }
+
+        .rsi-bar {
+            width: 100%;
+            height: 4px;
+            background: #0f172a;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .rsi-fill {
+            height: 100%;
+            background: #00d4aa;
+            transition: width 0.3s;
+        }
+
+        .alert-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-left: 4px solid #00d4aa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .alert-card.triggered {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .alert-time {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #00d4aa;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #e2e8f0;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            color: #e2e8f0;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .form-actions button {
+            flex: 1;
+        }
+
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #0f172a;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            gap: 0;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.active {
+            color: #00d4aa;
+        }
+
+        .nav-btn:hover {
+            color: #00d4aa;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #334155;
+            border-top-color: #00d4aa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 640px) {
+            header h1 {
+                font-size: 20px;
+            }
+
+            main {
+                padding: 12px;
+            }
+
+            .symbol-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                padding: 16px;
+            }
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #00d4aa;
+            color: #0f172a;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.alert {
+            background: #ef4444;
+            color: white;
+        }
+
+        .badge.success {
+            background: #10b981;
+            color: white;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .text-small {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00d4aa;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>
+                <span class="status-indicator"></span>
+                Crypto Monitor
+            </h1>
+        </header>
+
+        <main>
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                <button class="tab-btn" data-tab="alerts">Alerts</button>
+                <button class="tab-btn" data-tab="settings">Settings</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <div class="controls">
+                    <button id="startBtn" onclick="app.startMonitoring()">Start Monitoring</button>
+                    <button id="stopBtn" onclick="app.stopMonitoring()" class="secondary" style="display:none;">Stop Monitoring</button>
+                    <button class="secondary" onclick="app.openAddSymbolModal()">+ Add Symbol</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="symbolCount">0</div>
+                        <div class="stat-label">Active Symbols</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="alertCount">0</div>
+                        <div class="stat-label">Total Alerts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="lastUpdate">--:--</div>
+                        <div class="stat-label">Last Update</div>
+                    </div>
+                </div>
+
+                <div id="symbolsList"></div>
+            </div>
+
+            <!-- Alerts Tab -->
+            <div class="tab-content" id="alerts">
+                <div class="controls">
+                    <button class="danger" onclick="app.clearAllAlerts()" style="max-width:200px;">Clear All Alerts</button>
+                </div>
+                <div id="alertsList"></div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings">
+                <div class="card">
+                    <div class="card-title">Monitoring Settings</div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="autoDiscovery" onchange="app.updateSettings()">
+                                <span>Auto-discover new symbols</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkInterval">Check Interval (seconds)</label>
+                        <input type="number" id="checkInterval" min="5" max="300" value="30" onchange="app.updateSettings()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rsiBuy">RSI Buy Signal (&lt; value)</label>
+                        <input type="number" id="rsiBuy" min="10" max="50" value="30" onchange="app.updateSettings()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rsiSell">RSI Sell Signal (&gt; value)</label>
+                        <input type="number" id="rsiSell" min="50" max="90" value="70" onchange="app.updateSettings()">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">About</div>
+                    <div class="text-small">
+                        <p>Crypto Monitor v1.0</p>
+                        <p style="margin-top: 10px;">Real-time cryptocurrency price tracking with RSI and support/resistance level alerts.</p>
+                        <p style="margin-top: 10px;">Data sourced from Binance API</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav">
+        <button class="nav-btn active" data-nav="dashboard">
+            <span>📊</span>
+            Dashboard
+        </button>
+        <button class="nav-btn" data-nav="alerts">
+            <span>🔔</span>
+            Alerts
+        </button>
+        <button class="nav-btn" data-nav="settings">
+            <span>⚙️</span>
+            Settings
+        </button>
+    </div>
+
+    <!-- Add Symbol Modal -->
+    <div class="modal" id="addSymbolModal">
+        <div class="modal-content">
+            <div class="modal-header">Add New Symbol</div>
+            
+            <div class="form-group">
+                <label for="symbolInput">Symbol (e.g., BTCUSDT)</label>
+                <input type="text" id="symbolInput" placeholder="BTCUSDT" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="supportInput">Support Level</label>
+                <input type="number" id="supportInput" step="0.01" placeholder="Enter support level">
+            </div>
+
+            <div class="form-group">
+                <label for="resistanceInput">Resistance Level</label>
+                <input type="number" id="resistanceInput" step="0.01" placeholder="Enter resistance level">
+            </div>
+
+            <div class="form-actions">
+                <button class="secondary" onclick="app.closeAddSymbolModal()">Cancel</button>
+                <button onclick="app.addSymbol()">Add Symbol</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
